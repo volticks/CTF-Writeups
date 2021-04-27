@@ -320,6 +320,7 @@ Here's it working locally:
 ![25](https://user-images.githubusercontent.com/73792438/116258501-eb3ecc80-a76c-11eb-904f-33bea49bebc4.PNG)
 
 And on the challenge server:
+
 ![26](https://user-images.githubusercontent.com/73792438/116258994-54bedb00-a76d-11eb-9343-b56d3b2addd0.PNG)
 
 I don't know why i bothered censoring the flag when I just gave you the exploit, but oh well. 
