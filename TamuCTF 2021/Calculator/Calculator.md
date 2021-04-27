@@ -39,16 +39,16 @@ We then enter a command loop with `do {} while(True)` that will keep looping unt
 
 ![5](https://user-images.githubusercontent.com/73792438/116214516-aef47780-a73e-11eb-915f-9fbecdedc74d.PNG)
 
-'Jit' stands for 'Just in Time', and is generally refers to a type of compilation. This would hint that maybe our simple calculator program is something a little more than
+'Jit' stands for 'Just in Time', and generally refers to a type of compilation. This would hint that maybe our simple calculator program is something a little more than
 what it seems...
 
 You may wonder why I have named the two variables 'choice' and 'decision' as such, when they are practically the same thing. This is because I lack creativity and couldn't come up with any better names.
 
-Anyway, we should start from the top. We can tackle the beast that is the 'jit()' function once we understand how the others work, starting with `add_instruction()`.
+Anyway, we should start from the top. We can tackle the beast that is the `jit()` function once we understand how the others work, starting with `add_instruction()`.
 
 ### add_instruction()
 
-Again (thanks ghidra) the decompilation is very clean, so we can simply us it again. Before we do this I feel that its important to mention you shouldn't always trust a decompiler to tell you the truth of things, I just found that it was perfect for this challenge, but don't make it a habit. Anyway:
+Again (thanks ghidra) the decompilation is very clean, so we can simply use it again. Before we do this I feel that its important to mention you shouldn't always trust a decompiler to tell you the truth of things, I just found that it was perfect for this challenge, but don't make it a habit. Anyway:
 
 ![6](https://user-images.githubusercontent.com/73792438/116218998-05fc4b80-a743-11eb-8403-041e05a9e0d2.PNG)
 
@@ -236,7 +236,7 @@ The first thing before I show you were EXACTLY we return, is looking at the addr
 If you recall, the number we specified as our "add" command argument was 10416984888683040912, and this in hex is 0x9090909090909090. I'm sure you know where this is going lul. So we can completely control the operands, and can jump into said operand through manipulating the `real_skipped_instructions` variable. But we only have 8 bytes :(. 
 What on earth can we do with 8 bytes? Everything.
 
-Remember back when we `mprotect()`ed the memory to be rwx? That means its writable aaaand we have code execution. Could we call read() with the buffer/rsi as a value in this memory? Looking at the register layout at the time of jumping into the code, and we can see that:
+Remember back when we `mprotect()`ed the memory to be rwx? That means its writable aaaand we have code execution. Could we call `read()` with the buffer/rsi as a value in this memory? Looking at the register layout at the time of jumping into the code, and we can see that:
 
 ![21](https://user-images.githubusercontent.com/73792438/116254263-1b846c00-a769-11eb-9e16-065df2801ae8.PNG)
 
@@ -252,7 +252,7 @@ Looking at the register state we see that:
  - **RSI** = Nope
  - **RDX** = is a valid size, but needs to be in RSI
 
-So we need a snippet of asm that can clear rdi, swap rsi and rdi, and `syscall` that is less than 8 bytes. I came up with the following, and packed it as a number:
+So we need a snippet of asm that can clear rdi, swap rsi and rdi, and `syscall` that 8 bytes or less. I came up with the following, and packed it as a number:
 
 ```asm
   xor rdi, rdi
