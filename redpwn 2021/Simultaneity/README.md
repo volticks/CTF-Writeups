@@ -144,12 +144,12 @@ We can see that we do write to `__free_hook`. However on entering a random value
 
 ![image](https://user-images.githubusercontent.com/73792438/125358554-f44d3c00-e360-11eb-91f0-1ebd8d089d9f.png)
 
-This can mean only one thing; our input is never allocated / is never `free`'d
+This can mean only one thing; our input is never allocated / is never `free()`'d
 
 # Some scanf stuff
 
-Since `scanf` takes no `length` field, for all user input, even the stuff it doesnt care about (wrong format, wrong type, etc...) it has to take + store somehow. To do this
-it uses a 'scratch'-buffer. This is a buffer that will store ALL the input from `scanf`. This starts as a stack buffer, however will fallback to being a heap buffer if this 
+Since `scanf()` takes no `length` field, for all user input, even the stuff it doesnt care about (wrong format, wrong type, etc...) it has to take + store somehow. To do this
+it uses a 'scratch'-buffer. This is a buffer that will store ALL the input from `scanf()`. This starts as a stack buffer, however will fallback to being a heap buffer if this 
 stack buffer threatens to overflow:
 
 ```c
@@ -158,7 +158,7 @@ stack buffer threatens to overflow:
 ```
 [here](https://elixir.bootlin.com/glibc/glibc-2.28.9000/source/include/scratch_buffer.h#L22)
 
-This heap buffer is re-used whenever another call to `scanf` comes via rewinding the buffer position back to the start, such that the space can be re-used:
+This heap buffer is re-used whenever another call to `scanf()` comes via rewinding the buffer position back to the start, such that the space can be re-used:
 
 ```c
 /* Reinitializes BUFFER->current and BUFFER->end to cover the entire
@@ -172,7 +172,7 @@ char_buffer_rewind (struct char_buffer *buffer)
 ```
 [here](https://elixir.bootlin.com/glibc/glibc-2.28.9000/source/stdio-common/vfscanf.c#L216) and [here](https://elixir.bootlin.com/glibc/glibc-2.28.9000/source/stdio-common/vfscanf.c#L483)
 
-Whenever we want to add to this buffer, we need to call `char_buffer_add`. This does a couple things. 1st it checks if we currently positioned at the end of our buffer, and 
+Whenever we want to add to this buffer, we need to call `char_buffer_add()`. This does a couple things. 1st it checks if we currently positioned at the end of our buffer, and 
 if so it will take a 'slow' path. Otherwise it just adds a single character to the scratch buffer and moves on:
 
 ```c
@@ -237,7 +237,7 @@ __libc_scratch_buffer_grow_preserve (struct scratch_buffer *buffer)
 `buffer->data` is where we write into the scratch buffer - at least the origin, anyway. 
 
 From this we can understand that if we provide enough input - enough that we can progress the `buffer->current` to the `buffer->end` of the current buffer , we can 
-trigger a new allocation with `malloc()`. This has some caveats though; if `scanf` expects a number (like with our `__isoc99_scanf("%zu...`) it will only progress the 
+trigger a new allocation with `malloc()`. This has some caveats though; if `scanf()` expects a number (like with our `__isoc99_scanf("%zu...`) it will only progress the 
 `buffer->current` if it recieves a digit. You can read the source here [here](https://elixir.bootlin.com/glibc/glibc-2.28.9000/source/stdio-common/vfscanf.c#L1396).
 
 One thing I want to draw your attention to though, is this:
@@ -258,7 +258,7 @@ What we have here, is what I assume to be the loop that goes through the values 
 code). As you can see, if our character is a digit, we add it to the buffer. Cool.
 
 Now armed with this (somewhat useless) knowledge, we can go back and try writing to `__free_hook` again, but this time with at least 1024 bytes of digits in our buffer
-in order to allocate a chunk that will be free'd on exiting `scanf()`. And sure enough if we spam enough, we can call `free` on our allocation and thus trigger 
+in order to allocate a chunk that will be free'd on exiting `scanf()` (via `scratch_buffer_free()`) And sure enough if we spam '0's, we can call `free()` on our allocation and thus trigger 
 `__free_hook`:
 
 ![image](https://user-images.githubusercontent.com/73792438/125519774-a9246a30-4760-4c5f-8cfa-7482964f23be.png)
@@ -283,6 +283,6 @@ constraints:
   [rsp+0x30] == NULL
 ```
 
-Now with out of the way, things should be pretty EZ. Exploit is in the folder.
+Now with that out of the way, things should be pretty EZ. Exploit is in the folder.
 HTP.
 
