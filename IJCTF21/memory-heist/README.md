@@ -786,7 +786,7 @@ Looks like it works to me.
 
 # Closing thoughts
 
-No matter how good you think you are, there will always be someone better than you, and in this case for me it was hk. However by no means was this failure to solve this challenge a bad thing.
+No matter how good you think you are, there will always be someone better than you and in my case it was my team-mate. However by no means was my failure to solve this challenge a bad thing.
 
 Strictly speaking, failure (especially when learning) is never really bad, as long as you can come back, learn what you did wrong and try again, until you get it. This morning I had no idea how any of this exploit worked, however now I come out of this with a keener eye, and a wider horizon than before.
 
