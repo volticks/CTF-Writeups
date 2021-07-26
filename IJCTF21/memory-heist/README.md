@@ -3,7 +3,7 @@
 
 So [IJCTF](https://ctftime.org/event/1382) happened recently, taking place over the weekend from the 24th of June. It had some pretty damn good challenges, and was a great way for me and the rest of [zh3r0](https://ctftime.org/team/116018) to rejuvenate after being battered by the hellhole that was google CTF. So lets get into one of these challenges.
 
-`memory-heist` specifically was solved by my team-mate [hk](https://twitter.com/harsh_khuha). His solution was quite baffling at first but after debugging and running through it a few times I understood. This is the exploit I will be using (and explaining) during this writeup, so I hope it can help you understand the awesome way this was exploited.
+`memory-heist` specifically was solved by my team-mate. His solution was quite baffling at first but after debugging and running through it a few times I understood. This is the exploit I will be using (and explaining) during this writeup, so I hope it can help you understand the awesome way this was exploited.
 
 As usual, the exploit script is in the folder with this writeup (if this ends up on GitHub, anyway]). So if that's all you need, there it is.
 
