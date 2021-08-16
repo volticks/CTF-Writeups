@@ -272,9 +272,9 @@ bad_format:
 }
 ```
 
-Whats this then? One of the ways you can apply `seccomp` rules to a program is via [eBPF](https://ebpf.io/). eBPF is a relatively new addition to the Linux kernel, and for our purposes provides a programmable way to filter syscalls. Its alot deeper than that; it has its own JIT compiler in the kernel, and is also used across many projects to provide monitoring and filtering capabilities, but we'll be focusing specifically on syscall filtering.
+Whats this then? One of the ways you can apply `seccomp` rules to a program is via BPF. BPF is a relatively old feature of the Linux kernel, and for our purposes provides a programmable way to filter syscalls. Its alot deeper than that; it has its own JIT compiler in the kernel, and is also used across many projects to provide monitoring and filtering capabilities, but we'll be focusing specifically on syscall filtering.
 
-Anyway, `seccomp` has `SECCOMP_SET_MODE_FILTER` which we can use to apply eBPF rules the same way we would apply regular rules. Since eBPF is JIT compiled in the kernel, it has its own bytecode architecture; each instruction of this arch comes packed into a struct:
+Anyway, `seccomp` has `SECCOMP_SET_MODE_FILTER` which we can use to apply BPF rules the same way we would apply regular rules. Since BPF is JIT compiled in the kernel, it has its own bytecode architecture; each instruction of this arch comes packed into a struct:
 
 ```c
 struct sock_filter {    /* Filter block */
@@ -287,11 +287,10 @@ struct sock_filter {    /* Filter block */
 
 You only have to look deep into the abyss if you want to, but you don't particularly need to if you don't want to, I know I didn't - but if you do, take a look at:
 
-  - https://www.collabora.com/news-and-blog/blog/2019/04/15/an-ebpf-overview-part-2-machine-and-bytecode/
+  - https://www.collabora.com/news-and-blog/blog/2019/04/15/an-BPF-overview-part-2-machine-and-bytecode/
   - https://www.youtube.com/watch?v=2lbtr85Yrs4
-  - And of course: https://ebpf.io/
 
-All you need to know is this is how each eBPF instruction is formatted. There is another strange type here, `sock_fprog`:
+All you need to know is this is how each BPF instruction is formatted. There is another strange type here, `sock_fprog`:
 
 ```c
 struct sock_fprog {	/* Required for SO_ATTACH_FILTER. */
@@ -300,7 +299,7 @@ struct sock_fprog {	/* Required for SO_ATTACH_FILTER. */
 };
 ```
 
-This stores a list/array of `sock_filter`s, and as the name would suggest this structure is intended to store an entire eBPF program, with many instructions.
+This stores a list/array of `sock_filter`s, and as the name would suggest this structure is intended to store an entire BPF program, with many instructions.
 
 Next some pretty nice stuff happens:
 
@@ -333,11 +332,11 @@ perror_exit("execv");
 
 Via `scanf()`, were given control over the entire `sock_fprog` and each `sock_filter`, we can also apply as many instructions as we want, as we control the `len` field of the struct. Our filter is then applied, and then we `execv` with our `argv[1]`. What this means is:
 
-  - We control the entire eBPF program.
+  - We control the entire BPF program.
   - As seccomp filters also apply to children, we may apply this filter to any program we want by adding the path to `argv[1]`
   - Because of the kernel patch, we can apply this even to setuid binaries.
 
-You would assume, correctly, that eBPF has all the capabilities of a regular seccomp rule/set of rules.
+You would assume, correctly, that BPF has all the capabilities of a regular seccomp rule/set of rules.
 
 Now, are there any setuid programs here?
 
@@ -373,7 +372,7 @@ int main(int argc, char *argv[])
 }
 ```
 
-Pretty simple. If `faccessat` would not find the file `/flag` (or, if it where to just return a non-zero value) we will get a root shell, and from there we will be able to `cat /flag`. However how would this work? `faccessat` *should* always find `/flag`, because it exists? Right?
+Pretty simple. If `faccessat` would not access the file `/flag` (or, if it where to just return a non-zero value) we will get a root shell, and from there we will be able to `cat /flag`. However how would this work? `faccessat` *should* always find `/flag`, because it exists? Right?
 
 # Exploitation
 
@@ -381,7 +380,7 @@ This is a little different from what I'm used to, its not really binary exploita
 
 Anyway, exploitation is pretty straightforward:
 
-  1. Make an eBPF filter to 'hook' the `faccessat` syscall, and make it return a nonzero value.
+  1.  Make a BPF filter to 'hook' the `faccessat` syscall, and make it return a nonzero value.
   2.  Run `exploit_me` under `seccomp_loader` with this filter
   3.  Get root, cat flag.
 
@@ -436,11 +435,11 @@ return KILL
 
 This, again is pretty simple, at least more simple than using the BPF macros (lol). All it does is store the syscall number, check if it == faccessat, and if it does set the return value/errno to 5, effectively causing the syscall to fail. If we do any other syscall it simply allows it to continue. the `kill` bit is not used.
 
-You can dump this into eBPF bytecode in `seccomp-tools`:
+You can dump this into BPF bytecode in `seccomp-tools`:
 
 ```
 root@nomu:~/D/u/insecure_seccomp
-❯❯ seccomp-tools asm ebpf.asm                                                                                                        
+❯❯ seccomp-tools asm BPF.asm                                                                                                        
 " \x00\x00\x00\x00\x00\x00\x00\x15\x00\x00\x01\r\x01\x00\x00\x06\x00\x00\x00\x05\x00\x05\x00\x06\x00\x00\x00\x00\x00\xFF\x7F\x06\x00\x00\x00\x00\x00\x00\x00"
 ```
 
@@ -473,7 +472,7 @@ int main(int argc, char *argv[])
 
 ```
 
-Now when you compile+run `starter`, you should get your output as eBPF bytecode:
+Now when you compile+run `starter`, you should get your output as BPF bytecode:
 
 ```
 root@nomu:~/D/u/insecure_seccomp
@@ -508,7 +507,7 @@ You will get a root shell, and then flag.
 
 Kernel is very complicated. Bold statements only here xD.
 
-This was a pretty cool challenge, X3eRo0 and I both learned alot about eBPF. I hope you did too.
+This was a pretty cool challenge, X3eRo0 and I both learned alot about BPF. I hope you did too.
 
 Another lesson: Always `ls -la` to check whether a binary is setuid, and don't just assume that every shell will have fancy syntax highlighting for you :P (this confused me for a while, I couldnt spot the setuid binary, lol).
 
