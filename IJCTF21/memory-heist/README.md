@@ -795,6 +795,6 @@ That aside, there is a commented version of the exploit in the folder, and I rea
 ## References
 I don't usually do this, but here:
 
-https://sourceware.org/glibc/wiki/MallocInternals
+<https://sourceware.org/glibc/wiki/MallocInternals>
 
 Only one ref? Yup, but its pretty damn good.
