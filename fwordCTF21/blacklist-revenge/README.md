@@ -300,6 +300,6 @@ Thanks for sticking around this far, if you did.
 
 # References
 
-- https://man7.org/linux/man-pages/man2/accept.2.html
-- https://www.cs.uregina.ca/Links/class-info/330/Sockets/sockets.html
-- https://man7.org/linux/man-pages/man2/seccomp.2.htm
+- <https://man7.org/linux/man-pages/man2/accept.2.html>
+- <https://www.cs.uregina.ca/Links/class-info/330/Sockets/sockets.html>
+- <https://man7.org/linux/man-pages/man2/seccomp.2.htm>
