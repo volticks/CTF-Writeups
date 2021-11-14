@@ -513,9 +513,9 @@ Another lesson: Always `ls -la` to check whether a binary is setuid, and don't j
 
 # References
 
-  - https://unix.stackexchange.com/questions/562260/why-we-need-to-set-no-new-privs-while-before-calling-seccomp-mode-filter
-  - https://man7.org/linux/man-pages/man3/seccomp_rule_add.3.html
-  - https://linux.die.net/man/2/openat
-  - https://man7.org/linux/man-pages/man7/capabilities.7.html
-  - http://bricktou.cn/include/linux/schedtask_no_new_privs_en.html
-  - https://elixir.bootlin.com/linux/v5.12.14/source/include/linux/sched.h#L1646
+  - <https://unix.stackexchange.com/questions/562260/why-we-need-to-set-no-new-privs-while-before-calling-seccomp-mode-filter>
+  - <https://man7.org/linux/man-pages/man3/seccomp_rule_add.3.html>
+  - <https://linux.die.net/man/2/openat>
+  - <https://man7.org/linux/man-pages/man7/capabilities.7.html>
+  - <http://bricktou.cn/include/linux/schedtask_no_new_privs_en.html>
+  - <https://elixir.bootlin.com/linux/v5.12.14/source/include/linux/sched.h#L1646>
