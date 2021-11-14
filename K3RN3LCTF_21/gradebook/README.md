@@ -6,7 +6,7 @@ So for the past little while I didn't really have anything to write about, i hav
 
 `My teachers been using a commandline gradebook made by a first year student, must be vulnerable somehow.`
 
-Is that so? (you can find chall+exp files and libc+ld over [here](https://https://github.com/volticks/CTF-Writeups))
+Is that so? (you can find chall+exp files and libc+ld over [here](https://github.com/volticks/CTF-Writeups))
 Were given a libc, so after we patch it in we can start:
 
 `patchelf ./gradebook --replace-needed libc.so.6 ./libc.so.6`
@@ -586,7 +586,7 @@ $
 
 This was a nice challenge - i've never seen something as subtle as a format string mismatch in a ctf challenge before - it was only one character away from being correct.
 
-Actually all of the challenges I tried were pretty fun - well except the math challenges, I dont wanna talk about that :|.
+Actually all of the challenges I tried were pretty fun - well except the math challenges, I dont wanna talk about that lmao.
 
 See you in 3 months time when I make another one of these, or it might be before. Idk.
 
